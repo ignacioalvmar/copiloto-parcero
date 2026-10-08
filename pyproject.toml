@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cpbench"
+version = "1.0.0"
+description = "Benchmark toolkit for the Copiloto Parcero take-home challenge (THI HCIS, Colombia 2026)"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.31"]
+
+[tool.setuptools]
+packages = ["cpbench"]
+
+[tool.setuptools.package-data]
+cpbench = ["data/*"]

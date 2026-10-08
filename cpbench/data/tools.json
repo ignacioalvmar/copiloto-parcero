@@ -1,0 +1,1159 @@
+{
+ "source": "WorlDrive tool_registry.py",
+ "registry_version": "1.0.0",
+ "vehicle_fields": {
+  "sunroof_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "sunshade_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "trunk_door_position": {
+   "type": "str",
+   "default": "closed"
+  },
+  "window_driver_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "window_passenger_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "window_driver_rear_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "window_passenger_rear_position": {
+   "type": "int",
+   "min": 0,
+   "max": 100,
+   "default": 0
+  },
+  "reading_light_driver": {
+   "type": "bool",
+   "default": false
+  },
+  "reading_light_passenger": {
+   "type": "bool",
+   "default": false
+  },
+  "reading_light_driver_rear": {
+   "type": "bool",
+   "default": false
+  },
+  "reading_light_passenger_rear": {
+   "type": "bool",
+   "default": false
+  },
+  "fog_lights": {
+   "type": "bool",
+   "default": false
+  },
+  "head_lights_low_beams": {
+   "type": "bool",
+   "default": false
+  },
+  "head_lights_high_beams": {
+   "type": "bool",
+   "default": false
+  },
+  "ambient_light": {
+   "type": "enum",
+   "values": [
+    "OFF",
+    "RED",
+    "GREEN",
+    "BLUE",
+    "YELLOW",
+    "WHITE",
+    "PINK",
+    "ORANGE",
+    "PURPLE",
+    "CYAN"
+   ],
+   "default": "OFF"
+  },
+  "climate_temperature_driver": {
+   "type": "float",
+   "min": 16,
+   "max": 28,
+   "step": 0.5,
+   "default": 20.0
+  },
+  "climate_temperature_passenger": {
+   "type": "float",
+   "min": 16,
+   "max": 28,
+   "step": 0.5,
+   "default": 20.0
+  },
+  "steering_wheel_heating": {
+   "type": "int",
+   "min": 0,
+   "max": 3,
+   "default": 0
+  },
+  "seat_heating_driver": {
+   "type": "int",
+   "min": 0,
+   "max": 3,
+   "default": 0
+  },
+  "seat_heating_passenger": {
+   "type": "int",
+   "min": 0,
+   "max": 3,
+   "default": 0
+  },
+  "fan_speed": {
+   "type": "int",
+   "min": 0,
+   "max": 5,
+   "default": 0
+  },
+  "window_front_defrost": {
+   "type": "bool",
+   "default": false
+  },
+  "window_rear_defrost": {
+   "type": "bool",
+   "default": false
+  },
+  "fan_airflow_direction": {
+   "type": "enum",
+   "values": [
+    "FEET",
+    "HEAD",
+    "HEAD_FEET",
+    "WINDSHIELD",
+    "WINDSHIELD_FEET",
+    "WINDSHIELD_HEAD",
+    "WINDSHIELD_HEAD_FEET"
+   ],
+   "default": "FEET"
+  },
+  "air_conditioning": {
+   "type": "bool",
+   "default": false
+  },
+  "air_circulation": {
+   "type": "enum",
+   "values": [
+    "AUTO",
+    "FRESH_AIR",
+    "RECIRCULATION"
+   ],
+   "default": "AUTO"
+  },
+  "navigation_active": {
+   "type": "bool",
+   "default": false
+  },
+  "waypoints_id": {
+   "type": "list",
+   "default": []
+  },
+  "routes_to_final_destination_id": {
+   "type": "list",
+   "default": []
+  },
+  "email_addresses_sent_mail_to": {
+   "type": "list",
+   "default": []
+  },
+  "phone_numbers_called": {
+   "type": "list",
+   "default": []
+  }
+ },
+ "tools": [
+  {
+   "type": "function",
+   "function": {
+    "name": "set_climate_temperature",
+    "description": "Vehicle Control: Set the cabin temperature for a climate zone, between 16 and 28 degrees Celsius in 0.5 steps.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "zone": {
+       "type": "string",
+       "description": "The climate zone to set.",
+       "enum": [
+        "ALL_ZONES",
+        "DRIVER",
+        "PASSENGER"
+       ]
+      },
+      "temperature": {
+       "type": "number",
+       "description": "Target temperature in degrees Celsius.",
+       "minimum": 16,
+       "maximum": 28,
+       "multipleOf": 0.5
+      }
+     },
+     "required": [
+      "zone",
+      "temperature"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_fan_speed",
+    "description": "Vehicle Control: Set the ventilation fan speed, from 0 (off) to 5 (maximum).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "level": {
+       "type": "number",
+       "description": "Fan speed level.",
+       "minimum": 0,
+       "maximum": 5,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "level"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_seat_heating",
+    "description": "Vehicle Control: Set the seat heating level for a front seat, from 0 (off) to 3 (maximum).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "seat": {
+       "type": "string",
+       "description": "The seat to heat.",
+       "enum": [
+        "DRIVER",
+        "PASSENGER"
+       ]
+      },
+      "level": {
+       "type": "number",
+       "description": "Seat heating level.",
+       "minimum": 0,
+       "maximum": 3,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "seat",
+      "level"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_steering_wheel_heating",
+    "description": "Vehicle Control: Set the steering wheel heating level, from 0 (off) to 3 (maximum).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "level": {
+       "type": "number",
+       "description": "Steering wheel heating level.",
+       "minimum": 0,
+       "maximum": 3,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "level"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_air_conditioning",
+    "description": "Vehicle Control: Turn the air conditioning on or off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "on": {
+       "type": "boolean",
+       "description": "True to turn the air conditioning on, false to turn it off."
+      }
+     },
+     "required": [
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_air_circulation",
+    "description": "Vehicle Control: Set the air circulation mode.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "mode": {
+       "type": "string",
+       "description": "The air circulation mode.",
+       "enum": [
+        "AUTO",
+        "FRESH_AIR",
+        "RECIRCULATION"
+       ]
+      }
+     },
+     "required": [
+      "mode"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_fan_airflow_direction",
+    "description": "Vehicle Control: Set the direction of the ventilation airflow.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "direction": {
+       "type": "string",
+       "description": "The airflow direction.",
+       "enum": [
+        "FEET",
+        "HEAD",
+        "HEAD_FEET",
+        "WINDSHIELD",
+        "WINDSHIELD_FEET",
+        "WINDSHIELD_HEAD",
+        "WINDSHIELD_HEAD_FEET"
+       ]
+      }
+     },
+     "required": [
+      "direction"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_window_defrost",
+    "description": "Vehicle Control: Turn the window defrost on or off for the front window, rear window, or all windows.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "window": {
+       "type": "string",
+       "description": "Which window to defrost.",
+       "enum": [
+        "FRONT",
+        "REAR",
+        "ALL"
+       ]
+      },
+      "on": {
+       "type": "boolean",
+       "description": "True to turn defrost on, false to turn it off."
+      }
+     },
+     "required": [
+      "window",
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "open_close_window",
+    "description": "Vehicle Control: Open or close a window (or all windows) to a specified percentage: 0 (closed) to 100 (open).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "window": {
+       "type": "string",
+       "description": "The window to move.",
+       "enum": [
+        "DRIVER",
+        "PASSENGER",
+        "DRIVER_REAR",
+        "PASSENGER_REAR",
+        "ALL"
+       ]
+      },
+      "percentage": {
+       "type": "number",
+       "description": "Target window position in percent open.",
+       "minimum": 0,
+       "maximum": 100,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "window",
+      "percentage"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "open_close_sunroof",
+    "description": "Vehicle Control: Open or close the sunroof to a specified percentage: 0 (closed) to 100 (open).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "percentage": {
+       "type": "number",
+       "description": "Target sunroof position in percent open.",
+       "minimum": 0,
+       "maximum": 100,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "percentage"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "open_close_sunshade",
+    "description": "Vehicle Control: Open or close the sunshade to a specified percentage: 0 (closed) to 100 (open).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "percentage": {
+       "type": "number",
+       "description": "Target sunshade position in percent open.",
+       "minimum": 0,
+       "maximum": 100,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "percentage"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "open_close_trunk_door",
+    "description": "REQUIRES_CONFIRMATION, Vehicle Control: Open or close the trunk door.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "open_close": {
+       "type": "string",
+       "description": "Whether to open or close the trunk door.",
+       "enum": [
+        "OPEN",
+        "CLOSE"
+       ]
+      }
+     },
+     "required": [
+      "open_close"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": false,
+   "x_requires_confirmation": true
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_ambient_lights",
+    "description": "Vehicle Control: Set the interior ambient light color, or turn ambient lighting off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "color": {
+       "type": "string",
+       "description": "The ambient light color (OFF disables ambient lighting).",
+       "enum": [
+        "OFF",
+        "RED",
+        "GREEN",
+        "BLUE",
+        "YELLOW",
+        "WHITE",
+        "PINK",
+        "ORANGE",
+        "PURPLE",
+        "CYAN"
+       ]
+      }
+     },
+     "required": [
+      "color"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_reading_light",
+    "description": "Vehicle Control: Turn the reading light of a specific seat on or off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "seat": {
+       "type": "string",
+       "description": "The seat whose reading light to switch.",
+       "enum": [
+        "DRIVER",
+        "PASSENGER",
+        "DRIVER_REAR",
+        "PASSENGER_REAR"
+       ]
+      },
+      "on": {
+       "type": "boolean",
+       "description": "True to turn the reading light on, false to turn it off."
+      }
+     },
+     "required": [
+      "seat",
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_fog_lights",
+    "description": "Vehicle Control: Turn the fog lights on or off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "on": {
+       "type": "boolean",
+       "description": "True to turn the fog lights on, false to turn them off."
+      }
+     },
+     "required": [
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_head_lights_low_beams",
+    "description": "Vehicle Control: Turn the low beam headlights on or off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "on": {
+       "type": "boolean",
+       "description": "True to turn the low beams on, false to turn them off."
+      }
+     },
+     "required": [
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_head_lights_high_beams",
+    "description": "REQUIRES_CONFIRMATION, Vehicle Control: Turn the high beam headlights on or off.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "on": {
+       "type": "boolean",
+       "description": "True to turn the high beams on, false to turn them off."
+      }
+     },
+     "required": [
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": false,
+   "x_requires_confirmation": true
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_climate_settings",
+    "description": "Vehicle Control: Get the current climate settings: fan speed, airflow direction, air conditioning, air circulation, and window defrost states.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_temperature_inside_car",
+    "description": "Vehicle Control: Get the currently set cabin temperatures for driver and passenger.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_exterior_lights_status",
+    "description": "Vehicle Control: Get the status of the exterior lights (fog lights, low beams, high beams).",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_seat_heating_level",
+    "description": "Vehicle Control: Get the current seat heating levels.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_steering_wheel_heating_level",
+    "description": "Vehicle Control: Get the current steering wheel heating level.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "climate",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_ambient_light_status_and_color",
+    "description": "Vehicle Control: Get the current ambient light status and color.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_reading_lights_status",
+    "description": "Vehicle Control: Get the on/off status of all reading lights.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "lighting",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_vehicle_window_positions",
+    "description": "Vehicle Control: Get the current positions of all windows (percent open).",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_sunroof_and_sunshade_position",
+    "description": "Vehicle Control: Get the current positions of the sunroof and sunshade (percent open).",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_trunk_door_position",
+    "description": "Vehicle Control: Get the current trunk door position.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "openings",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_seats_occupancy",
+    "description": "Vehicle Control: Get which seats are currently occupied.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "vehicle_info",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_car_color",
+    "description": "Vehicle Control: Get the color of the car.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "vehicle_info",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "play_music",
+    "description": "Media: Start music playback. Optionally select a track by its title or id; otherwise the current track plays.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "track": {
+       "type": "string",
+       "description": "Optional track title or id to play."
+      }
+     },
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "pause_music",
+    "description": "Media: Pause music playback.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "resume_music",
+    "description": "Media: Resume music playback.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "next_track",
+    "description": "Media: Skip to the next track.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "previous_track",
+    "description": "Media: Go back to the previous track.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_music_volume",
+    "description": "Media: Set the music volume, from 0 (mute) to 10 (maximum).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "level": {
+       "type": "number",
+       "description": "Volume level.",
+       "minimum": 0,
+       "maximum": 10,
+       "multipleOf": 1
+      }
+     },
+     "required": [
+      "level"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_music_status",
+    "description": "Media: Get the current music playback status (track, playing state, position, volume).",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "media",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_contacts",
+    "description": "Communication: Get the list of phone contacts.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "phone",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "call_phone_by_contact",
+    "description": "Communication: Start a phone call to a contact by name.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "description": "The contact name to call."
+      }
+     },
+     "required": [
+      "name"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "phone",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "end_phone_call",
+    "description": "Communication: End the active phone call.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "phone",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_autonomous_mode",
+    "description": "Driving: Turn autonomous driving mode on (the vehicle drives itself) or off (the driver takes manual control).",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "on": {
+       "type": "boolean",
+       "description": "True to enable autonomous mode, false to hand control to the driver."
+      }
+     },
+     "required": [
+      "on"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "driving",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_cruise_control",
+    "description": "Driving: Enable or disable cruise control, optionally with a target speed in km/h.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "enabled": {
+       "type": "boolean",
+       "description": "True to enable cruise control, false to disable it."
+      },
+      "speed_kmh": {
+       "type": "number",
+       "description": "Target cruise speed in km/h.",
+       "minimum": 10,
+       "maximum": 160
+      }
+     },
+     "required": [
+      "enabled"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "driving",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "get_driving_status",
+    "description": "Driving: Get the current driving status (speed, autonomous mode, on-road state).",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "driving",
+   "x_reads_state": true,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "set_navigation_destination",
+    "description": "Navigation: Set the navigation destination by name and activate route guidance.",
+    "parameters": {
+     "type": "object",
+     "properties": {
+      "destination_name": {
+       "type": "string",
+       "description": "The destination name to navigate to."
+      }
+     },
+     "required": [
+      "destination_name"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "navigation",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  },
+  {
+   "type": "function",
+   "function": {
+    "name": "cancel_navigation",
+    "description": "Navigation: Cancel the active navigation and clear the route.",
+    "parameters": {
+     "type": "object",
+     "properties": {},
+     "required": [],
+     "additionalProperties": false
+    }
+   },
+   "x_domain": "navigation",
+   "x_reads_state": false,
+   "x_requires_confirmation": false
+  }
+ ]
+}
