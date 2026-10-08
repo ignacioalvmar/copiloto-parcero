@@ -18,10 +18,10 @@ Set público: 20 casos (5 por categoría). Set oculto: 32 casos (8 por categorí
 1. Se arma el estado inicial del carro (`context_init` del caso sobre los valores por defecto) y se reemplazan `{{current_datetime}}` y `{{vehicle_context}}` en tu system prompt.
 2. Se envía el mensaje de la persona. El modelo responde con texto, con llamadas a herramientas, o ambos.
 3. Cada llamada se ejecuta contra un modelo del carro que replica la semántica del simulador de WorlDrive y devuelve `{"status": "SUCCESS"}` o `{"status": "FAILURE", "message": ...}` (argumentos inválidos, herramienta desconocida, contacto ambiguo). El resultado vuelve al modelo como mensaje `tool`.
-4. Se repite hasta que el modelo responde sin herramientas o hasta 4 rondas de herramientas por turno. Si llega al límite, se le pide una respuesta final sin herramientas.
+4. Se repite hasta que el modelo responde sin herramientas o hasta 6 rondas de herramientas por turno (una llamada por ronda si el proveedor no admite llamadas en paralelo). Si llega al límite, se le pide una respuesta final sin herramientas.
 5. Si el caso tiene `followup` (una segunda frase de la persona, por ejemplo la aclaración a una pregunta o el "sí" a una confirmación), se envía y se repite el ciclo.
 
-Parámetros fijos: temperatura 0, `max_tokens` 400, semilla fija cuando el servidor del modelo la acepta.
+Parámetros fijos: temperatura 0, semilla fija cuando el servidor del modelo la acepta, y los parámetros del modelo que anuncie la organización (por ejemplo, esfuerzo de razonamiento bajo).
 
 ## 3. Un caso se supera cuando todos sus componentes aplicables pasan
 
@@ -75,17 +75,17 @@ Se evalúan todas las respuestas habladas del set.
 
 ### 4.1 Juez (60 %)
 
-Un modelo juez recibe hasta 24 respuestas y devuelve una nota de 0 a 10 con esta rúbrica: léxico y giros colombianos naturales sin caricatura; ausencia de marcas de otros países; registro coherente (tú o usted sostenido, cercano y respetuoso); naturalidad para voz; español correcto sin inglés innecesario. El modelo juez es el que anuncie la organización y es el mismo para todos los equipos.
+Un modelo juez recibe hasta 40 respuestas y devuelve una nota de 0 a 10 con una escala anclada y exigente: 0 a 3 para errores, inglés, marcas de otros países o caricatura; 4 a 6 para español correcto pero neutro, "de manual", que podría venir de cualquier país (ahí cae el prompt de partida); 7 a 8 para un registro claramente colombiano y natural en buena parte de las respuestas, con trato coherente y sin caricatura; 9 a 10 cuando una persona de Colombia diría "este asistente es de aquí", con variedad de giros y cero marcas foráneas. Repetir una sola expresión colombiana en todas las respuestas no pasa de 7. El modelo juez es el que anuncie la organización y es el mismo para todos los equipos.
 
 ### 4.2 Léxico (25 %)
 
-Reglas deterministas sobre el texto normalizado (sin tildes, minúsculas):
+Reglas deterministas sobre el texto normalizado (sin tildes, minúsculas, sin puntuación):
 
 - Restan 0,1 por aparición: `vale` (salvo "vale la pena"), `vosotros`, `vuestro`, `coche`, `ordenador`, `móvil`, `aparcar`, `aparcamiento`, `tío`, `mola`, `guay`, `zumo`, `órale`, `güey`, `wey`, `chido`, `padrísimo`, `neta`, `chale`, `che`, `boludo`, `auto` (como sustantivo), `pibe`. El voseo ("vos", "tenés") no resta: es natural en Antioquia y el Valle.
 - Restan 0,2 por aparición de marcas de inglés: `the`, `and`, `sure`, `okay`, `done`, `turned on/off`, `setting the`, `I'll`, `I've`.
-- Suman: que al menos un tercio de las respuestas contenga alguna marca natural como `listo`, `de una`, `con gusto`, `a la orden`, `claro que sí`, `dale`, `carro`, `celular`, `parquear`, `droguería`, `gasolinera`, `calientico`, `fresquito`, `ya mismo`, `hágale`, `bacano`, `chévere`, `pilas`, `ojo`, `qué pena`, `con mucho gusto`, `ya quedó`, `te pongo`, `le pongo`.
+- Suman dos cosas a la vez: **cobertura** (qué proporción de respuestas contiene alguna marca natural como `listo`, `de una`, `con gusto`, `a la orden`, `claro que sí`, `dale`, `carro`, `celular`, `parquear`, `droguería`, `gasolinera`, `calientico`, `fresquito`, `ya mismo`, `hágale`, `bacano`, `chévere`, `pilas`, `ojo`, `qué pena`, `con mucho gusto`, `ya quedó`, `te pongo`, `le pongo`; crédito completo a partir de la mitad de las respuestas) y **variedad** (crédito completo con al menos cuatro marcas distintas en todo el set).
 
-Puntaje de léxico = 0,6 + 0,4 × (proporción de respuestas con marca, saturando en un tercio) menos las penalizaciones, acotado entre 0 y 1. Repetir "parce" en cada frase no suma más; sí puede bajar la nota del juez.
+Puntaje de léxico = 0,5 + 0,5 × cobertura × variedad, menos las penalizaciones, acotado entre 0 y 1. Decir "listo" en todas las respuestas da cobertura total pero variedad de un cuarto.
 
 ### 4.3 Formato para voz (15 %)
 

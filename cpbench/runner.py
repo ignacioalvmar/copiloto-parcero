@@ -18,7 +18,7 @@ from . import vehicle
 from .llm import ChatResult, LLMConfig, LLMError, chat
 
 FIXED_DATETIME = "jueves 15 de octubre de 2026, 18:30"
-MAX_TOOL_ROUNDS_DEFAULT = 4
+MAX_TOOL_ROUNDS_DEFAULT = 6  # one call per round on providers without parallel tool use
 
 
 def render_system_prompt(template: str, state: Dict[str, Any], datetime_text: str = FIXED_DATETIME) -> str:
@@ -86,7 +86,8 @@ def run_case(case: Dict[str, Any], system_prompt: str, cfg: LLMConfig,
                 }
                 turn_calls.append(record)
                 all_calls.append(record)
-                messages.append({"role": "tool", "tool_call_id": tc["id"], "name": tc["name"],
+                # No "name" field here: some providers (Groq) reject messages[].name with HTTP 400.
+                messages.append({"role": "tool", "tool_call_id": tc["id"],
                                  "content": json.dumps(res, ensure_ascii=False)})
             if rounds >= max_tool_rounds:
                 # Give the model one last chance to speak without tools.

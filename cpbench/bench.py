@@ -98,7 +98,7 @@ def strip_markdown_fence(prompt: str) -> str:
 
 def run_set(cases: List[Dict[str, Any]], system_prompt: str, cfg: LLMConfig,
             concurrency: int = 4, runs: int = 1, with_judge: bool = True,
-            judge_cfg: Optional[LLMConfig] = None, max_tool_rounds: int = 4,
+            judge_cfg: Optional[LLMConfig] = None, max_tool_rounds: int = 6,
             include_transcripts: bool = False) -> Dict[str, Any]:
     """Run every case ``runs`` times (Pass^k: a case passes only if every run
     passes) and return the aggregate plus per-case details."""

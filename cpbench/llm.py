@@ -55,19 +55,26 @@ class ChatResult:
 class LLMConfig:
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None,
                  model: Optional[str] = None, provider: Optional[str] = None,
-                 temperature: float = 0.0, timeout_s: float = 90.0, max_tokens: int = 400,
-                 seed: Optional[int] = 7, extra_body: Optional[Dict[str, Any]] = None):
-        self.base_url = (base_url or os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1")).rstrip("/")
-        self.api_key = api_key or os.environ.get("LLM_API_KEY", "none")
-        self.model = model or os.environ.get("LLM_MODEL", "qwen2.5:7b-instruct")
-        self.provider = (provider or os.environ.get("LLM_PROVIDER", "openai_compatible")).lower()
+                 temperature: float = 0.0, timeout_s: Optional[float] = None, max_tokens: Optional[int] = None,
+                 seed: Optional[int] = 7, extra_body: Optional[Dict[str, Any]] = None, env_prefix: str = "LLM"):
+        env = lambda key, default=None: os.environ.get(f"{env_prefix}_{key}", default)  # noqa: E731
+        self.base_url = (base_url or env("BASE_URL", "http://localhost:11434/v1")).rstrip("/")
+        self.api_key = api_key or env("API_KEY", "none")
+        self.model = model or env("MODEL", "qwen2.5:7b-instruct")
+        self.provider = (provider or env("PROVIDER", "openai_compatible")).lower()
         if self.provider == "mock":
             self.model = "mock"
         self.temperature = temperature
-        self.timeout_s = timeout_s
-        self.max_tokens = max_tokens
+        self.timeout_s = float(timeout_s if timeout_s is not None else env("TIMEOUT_S", "90"))
+        # Reasoning models (gpt-oss, Qwen3 in thinking mode) spend tokens before
+        # answering, so the ceiling must be well above the length of a spoken reply.
+        self.max_tokens = int(max_tokens if max_tokens is not None else env("MAX_TOKENS", "1200"))
         self.seed = seed
-        self.extra_body = extra_body or {}
+        # Provider-specific knobs as JSON, e.g. {"reasoning_effort": "low"} for
+        # gpt-oss on Groq, or {"chat_template_kwargs": {"enable_thinking": false}}
+        # for Qwen3 on vLLM.
+        extra = extra_body if extra_body is not None else json.loads(env("EXTRA_BODY", "{}") or "{}")
+        self.extra_body = dict(extra)
 
     def describe(self) -> Dict[str, Any]:
         return {"provider": self.provider, "model": self.model,

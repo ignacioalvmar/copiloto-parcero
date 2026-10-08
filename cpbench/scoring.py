@@ -385,9 +385,14 @@ def style_from_rules(replies: List[str]) -> Dict[str, Any]:
     format_score = sum(1 for f in fmt if f["pass"]) / len(fmt)
     n_pen = sum(len(l["penalties"]) + 2 * len(l["english"]) for l in lex)
     n_mark = sum(1 for l in lex if l["markers"])
-    # Start from how many replies carry at least one Colombian marker (soft
-    # target: a third of replies), then subtract 0.1 per foreign word.
-    lexicon_score = max(0.0, min(1.0, 0.6 + 0.4 * min(1.0, n_mark / max(1.0, len(lex) / 3)) - 0.1 * n_pen))
+    distinct = len({m for l in lex for m in l["markers"]})
+    # Coverage: how many replies carry at least one Colombian marker (full
+    # credit at half of the replies). Variety: at least four different markers
+    # across the set, so repeating "listo" everywhere does not max out. Then
+    # subtract 0.1 per foreign word (0.2 per English marker).
+    coverage = min(1.0, n_mark / max(1.0, len(lex) / 2))
+    variety = min(1.0, distinct / 4.0)
+    lexicon_score = max(0.0, min(1.0, 0.5 + 0.5 * coverage * variety - 0.1 * n_pen))
     issues = sorted({i for f in fmt for i in f["issues"]})
     return {"format": round(format_score, 3), "lexicon": round(lexicon_score, 3), "format_issues": issues,
             "lexicon_penalties": sorted({p for l in lex for p in l["penalties"] + l["english"]}),

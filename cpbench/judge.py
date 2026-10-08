@@ -17,17 +17,18 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .llm import LLMConfig, LLMError, chat
 
-JUDGE_SYSTEM = """Eres un evaluador lingüístico experto en el español hablado en Colombia.
-Vas a calificar las respuestas de un asistente de voz de un carro. Las respuestas se leen en voz alta a la persona que maneja.
+JUDGE_SYSTEM = """Eres un evaluador lingüístico experto en el español hablado en Colombia. Vas a calificar las respuestas de un asistente de voz de un carro; se leen en voz alta a la persona que maneja.
 
-Califica de 0 a 10 qué tan bien suena el asistente como un colombiano o colombiana real hablando con naturalidad, con estos criterios:
-1. Léxico y giros colombianos naturales (carro, celular, parquear, droguería, listo, de una, con gusto, a la orden, calientico), sin caer en caricatura ni abusar de "parce" o de jerga que un asistente no usaría.
-2. Ausencia de marcas de otros países (vale, coche, ordenador, móvil, vosotros, órale, güey, che, vos).
-3. Registro coherente: trato de tú (o usted) consistente, cercano y respetuoso, como se habla en Colombia.
-4. Naturalidad para voz: frases cortas, calidez, sin sonar a traducción ni a texto corporativo.
-5. Español correcto y fluido, sin inglés innecesario.
+Califica de 0 a 10 qué tan bien suena el asistente como un colombiano o colombiana real. Usa esta escala anclada y sé exigente: la mayoría de los asistentes caen entre 4 y 7.
 
-Responde SOLO con un JSON: {"score": <número 0-10>, "razon": "<máximo 40 palabras>"}"""
+- 0 a 3: errores de español, inglés innecesario, marcas claras de otro país (vale, coche, ordenador, móvil, vosotros, órale, güey, che, vos porteño), o caricatura (jerga forzada, "parce" en cada frase, exageración de acento).
+- 4 a 6: español correcto y neutro, "de manual": podría venir de cualquier país. Frases como "Listo, 22 grados para ti" sin nada más que lo ubique en Colombia caen aquí. Este es el punto de partida típico.
+- 7 a 8: registro claramente colombiano y natural en una parte importante de las respuestas: léxico cotidiano (carro, celular, parquear, droguería, calientico, de una, con gusto, a la orden, hágale, ya mismo), trato coherente (tú o usted sostenido, cálido y respetuoso), confirmaciones idiomáticas, sin caricatura.
+- 9 a 10: una persona de Colombia diría "este asistente es de aquí": la mayoría de las respuestas suenan a conversación real, con variedad de giros (no la misma muletilla repetida), calidez, ritmo de habla y brevedad propios de la voz en el carro, y cero marcas foráneas. Reserva el 10 para casos excepcionales.
+
+Penaliza por igual lo neutro sin personalidad y lo caricaturesco. Valora la variedad: repetir una sola expresión colombiana en todas las respuestas no sube de 7.
+
+Responde SOLO con un JSON: {"score": <número 0-10>, "razon": "<máximo 40 palabras, cita una o dos frases que justifiquen la nota>"}"""
 
 
 def judge_config() -> Optional[LLMConfig]:
@@ -40,11 +41,13 @@ def judge_config() -> Optional[LLMConfig]:
     model = os.environ.get("JUDGE_MODEL") or os.environ.get("LLM_MODEL")
     if not base or not model:
         return None
+    extra = os.environ.get("JUDGE_EXTRA_BODY") or os.environ.get("LLM_EXTRA_BODY") or "{}"
     return LLMConfig(base_url=base, api_key=os.environ.get("JUDGE_API_KEY") or os.environ.get("LLM_API_KEY"),
-                     model=model, provider=provider or "openai_compatible", temperature=0.0, max_tokens=200)
+                     model=model, provider=provider or "openai_compatible", temperature=0.0,
+                     max_tokens=int(os.environ.get("JUDGE_MAX_TOKENS", "800")), extra_body=json.loads(extra))
 
 
-def judge_style(replies: List[str], cfg: Optional[LLMConfig], max_replies: int = 24) -> Tuple[Optional[float], Optional[str]]:
+def judge_style(replies: List[str], cfg: Optional[LLMConfig], max_replies: int = 40) -> Tuple[Optional[float], Optional[str]]:
     """Return (score in 0..1, note) or (None, reason) when no judge ran."""
     replies = [r.strip() for r in replies if (r or "").strip()]
     if cfg is None or not replies:

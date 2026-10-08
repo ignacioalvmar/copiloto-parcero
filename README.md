@@ -141,7 +141,7 @@ Detalles, pesos de la evaluación y rúbrica en `docs/ENTREGA.md`. El puntaje de
 
 **El servidor dice que estoy en el límite.** Espera a que pase la hora (set público) o el día (set oculto), o corre el set público localmente mientras tanto.
 
-**El asistente llama herramientas con argumentos inválidos.** El carro responde con un error y el modelo puede corregirse; eso no resta puntos directamente, pero gasta rondas (máximo 4 por turno) y suele terminar en un caso fallido. Explica los valores válidos en el prompt (ver `docs/HERRAMIENTAS.md`).
+**El asistente llama herramientas con argumentos inválidos.** El carro responde con un error y el modelo puede corregirse; eso no resta puntos directamente, pero gasta rondas (máximo 6 por turno) y suele terminar en un caso fallido. Explica los valores válidos en el prompt (ver `docs/HERRAMIENTAS.md`).
 
 **¿Qué pasa si el servidor se cae?** Avísanos en el canal de ayuda. Si fue culpa nuestra, extendemos la fecha límite para toda la cohorte por igual.
 
