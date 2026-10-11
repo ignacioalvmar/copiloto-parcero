@@ -6,17 +6,17 @@ Reto para llevar a casa del taller **AI and Autonomous Driving Research at THI**
 
 ---
 
-## Datos de tu cohorte
+## Datos de la cohorte (COH1)
 
-La persona facilitadora los dicta en el taller. Anótalos aquí para no perderlos.
+Estos son los datos de evaluación de mi cohorte. El código de acceso no se publica en el repositorio.
 
 | | |
 | --- | --- |
-| Servidor de evaluación | `https://SERVIDOR` |
-| Código de acceso | `CODIGO` |
-| Modelo fijo con el que se califica | `MODELO` |
-| Fecha y hora límite de tu cohorte | `FECHA_LIMITE` (hora de Colombia) |
-| Canal de ayuda | `CANAL` |
+| Servidor de evaluación | [copiloto-parcero-api.onrender.com](https://copiloto-parcero-api.onrender.com/) |
+| Código de acceso | Se ingresó al participar; no se publica aquí |
+| Modelo fijo con el que se calificó | `openai/gpt-oss-120b` |
+| Fecha y hora límite de la cohorte | Domingo 11 de octubre de 2026, 1:00 p. m. (hora de Colombia) |
+| Canal de ayuda | [Discord del taller](https://discord.gg/q2U5AY4qC) |
 
 ---
 
@@ -144,6 +144,18 @@ Detalles, pesos de la evaluación y rúbrica en `docs/ENTREGA.md`. El puntaje de
 **El asistente llama herramientas con argumentos inválidos.** El carro responde con un error y el modelo puede corregirse; eso no resta puntos directamente, pero gasta rondas (máximo 6 por turno) y suele terminar en un caso fallido. Explica los valores válidos en el prompt (ver `docs/HERRAMIENTAS.md`).
 
 **¿Qué pasa si el servidor se cae?** Avísanos en el canal de ayuda. Si fue culpa nuestra, extendemos la fecha límite para toda la cohorte por igual.
+
+## Entrega de ParceroA
+
+| | |
+| --- | --- |
+| **Integrante** | Tannia Lucia Hernandez |
+| **Cohorte y modelo** | COH1 · `openai/gpt-oss-120b` |
+| **Resultado oculto final** | v12 · 66,4/100 · 20/32 tareas · voz 82/100 |
+| **Video de presentación (inglés)** | [Ver el video en Google Drive](https://drive.google.com/file/d/1shdnR2KGW98_QjLKWkBqV8wLNRWP6MCT/view?usp=drivesdk) |
+| **Documentos** | [Reflexión](REFLEXION.md) · [Registro de IA](AI_LOG.md) |
+
+Las peticiones directas funcionan bien; siguen siendo más difíciles las acciones de varios pasos, las ambiguas y algunas situaciones inseguras. La comparación de versiones está en [eval/RESULTADOS.md](eval/RESULTADOS.md).
 
 ## Créditos y licencia
 
